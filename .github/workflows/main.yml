@@ -1,0 +1,43 @@
+name: Prod
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+permissions:
+  contents: write #to create a release
+
+env:
+  TARGET_ENV: prod
+
+jobs:
+  release-workflow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        # Use a fetch-depth of 2 to avoid error `fatal: origin/main...HEAD: no merge base`
+        with:
+          fetch-depth: 2
+      - name: setup python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9.x'
+      - name: Install Hatch
+        run: pip install hatch
+      - name: Install build
+        run: pip install build
+      - name: Install Databricks CLI
+        run: pip install databricks-cli
+      - name: publish
+        env:
+          TEST_TYPE: publish-prod
+          DATABRICKS_TOKEN: ${{ secrets.DBX_E2_BEARER_TOKEN }}
+          DATABRICKS_HOST: ${{ secrets.DBX_E2_HOST }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ci/run_conditionals.sh
