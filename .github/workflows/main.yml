@@ -31,13 +31,9 @@ jobs:
         run: pip install hatch
       - name: Install build
         run: pip install build
-      - name: Install Databricks CLI
-        run: pip install databricks-cli
       - name: publish
         env:
           TEST_TYPE: publish-prod
-          DATABRICKS_TOKEN: ${{ secrets.DBX_E2_BEARER_TOKEN }}
-          DATABRICKS_HOST: ${{ secrets.DBX_E2_HOST }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ci/run_conditionals.sh
