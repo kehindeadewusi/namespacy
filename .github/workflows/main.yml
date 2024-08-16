@@ -31,10 +31,13 @@ jobs:
         run: pip install hatch
       - name: Install build
         run: pip install build
+      - name: Get timestamp
+        id: timestamp
+        run: echo "timestamp=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
       - name: publish
         env:
           TEST_TYPE: publish-prod
-          RELEASE_VER: $(date +'%Y%m%d%H%M%S')
+          RELEASE_VER: ${{ steps.timestamp.outputs.timestamp }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create $RELEASE_VER --target main --generate-notes
