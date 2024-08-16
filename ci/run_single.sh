@@ -54,10 +54,10 @@ case ${TEST_TYPE} in
         FINAL_WHEEL=$(echo $WHEEL | sed "s/-py3-none-any\.whl/-${BUILD_TAG}-py3-none-any\.whl/")
         mv $WHEEL $FINAL_WHEEL
 
-        databricks fs cp "$FINAL_WHEEL" dbfs:/flow_temp/
+        DBX_DEST=dbfs:/flow_temp/
+        databricks fs cp "$FINAL_WHEEL" $DBX_DEST
 
-        echo "$FINAL_WHEEL"
-        echo "copied to Databricks dbfs:/flow_temp"
+        echo "${FINAL_WHEEL} copied to Databricks ${DBX_DEST}"
 
         retval=$?
  
@@ -66,15 +66,14 @@ case ${TEST_TYPE} in
     publish-prod)
         python -m build
 
+        DBX_DEST=dbfs:/flow_temp/
         WHEEL=$(ls dist/*.whl)
-        databricks fs cp "$WHEEL_FILE" dbfs:/flow_temp/
+        databricks fs cp "$WHEEL" "$DBX_DEST"
 
-        echo "$WHEEL"
-        echo "copied to Databricks dbfs:/flow_temp"
+        echo "${WHEEL} copied to Databricks ${DBX_DEST}"
 
-        # make release
-        VERSION=`hatch version`
-        gh release create $VERSION --target main --generate-notes
+        # add packages to release
+        gh release upload "$RELEASE_VER" "$WHEEL"
 
         retval=$?       
         ;;
