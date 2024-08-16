@@ -37,6 +37,7 @@ jobs:
       - name: publish
         env:
           TEST_TYPE: publish-prod
+          BUILD_TYPE: presubmit
           RELEASE_VER: ${{ steps.timestamp.outputs.timestamp }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

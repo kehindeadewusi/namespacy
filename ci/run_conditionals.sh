@@ -10,9 +10,7 @@
 # This script requires the following environment variables to be set:
 # `BUILD_TYPE` should be one of ["presubmit", "continuous"]
 # `TEST_TYPE` should be one of ["lint", "lint_setup_py", "docs", "docfx", "prerelease"]
-# `PY_VERSION` should be one of ["3.8", "3.9", "3.10", "3.11", "3.12"]
-
-# `TEST_TYPE` and `PY_VERSION` are required by the script `ci/run_single.sh`
+# `TEST_TYPE` is required by the script `ci/run_single.sh`
 
 # `-e` enables the script to automatically fail when a command fails
 # `-o pipefail` sets the exit code to non-zero if any command fails,
